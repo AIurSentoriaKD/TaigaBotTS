@@ -3,8 +3,10 @@ import {
   EmbedBuilder,
   AttachmentBuilder,
 } from "discord.js";
+import { statSync } from "fs";
+import { PixivIllust } from "pixiv.ts";
 
-import { command } from "../../utils";
+import { command, EmbedIllust } from "../../utils";
 const meta = new SlashCommandBuilder()
   .setName("pixivid")
   .setDescription("Seach pixiv image by ID")
@@ -19,45 +21,43 @@ export default command(meta, async ({ interaction, client }) => {
     `https://www.pixiv.net/en/artworks/${message}`
   );
 
-  let image: any;
-  if (illust.page_count < 2) {
-    image = await client.pixiv.util.downloadIllust(
-      `https://www.pixiv.net/en/artworks/${message}`,
-      "./illust",
-      "large"
-    );
-  } else {
-    image = await client.pixiv.util.downloadIllusts(
-      `https://www.pixiv.net/en/artworks/${message}`,
-      "./illust",
-      "large",
-      [{ folder: `${message}`, tag: `${message}` }]
-    );
+  const image = await client.pixiv.util.downloadIllust(
+    `https://www.pixiv.net/en/artworks/${message}`,
+    "./illust",
+    "large"
+  );
+
+  //console.log(illust, image);
+
+  let imageDir = `./illust/${illust.id}_p0.png`;
+
+  if (illust.page_count == 1) {
+    imageDir = `./illust/${illust.id}.png`;
   }
+  const imageFile = statSync(imageDir);
 
-  // const files = readdirSync(image.split(".")[0]);
-  // const filePaths = files.map((file) => path.join(image.split(".")[0], file));
+  let embed: EmbedBuilder;
+  let file: AttachmentBuilder;
+  let imagePath: string;
 
-  // const times = metadata.ugoira_metadata.frames.map((frame) => frame.delay);
+  if (imageFile.size / (1024 * 1024) > 8) {
+    //Subir a imgur
+    return await interaction.editReply({ content: "Imagen pesada" });
+    //embed = EmbedIllust(illust, interaction.user.defaultAvatarURL,);
+  } else {
+    embed = EmbedIllust(illust, interaction.user.displayAvatarURL());
+    if (illust.page_count == 1) {
+      imagePath = `./illust/${illust.id}.png`;
+      embed.setImage(`attachment://${illust.id}.png`);
+    } else {
+      imagePath = `./illust/${illust.id}_p0.png`;
+      embed.setImage(`attachment://${illust.id}_p0.png`);
+    }
+    file = new AttachmentBuilder(imagePath);
 
-  // const imageWebp = await client.pixiv.util.encodeAnimatedWebp(filePaths, times);
-  // console.log(imageWebp);
-  // const stats = statSync(image);
-  // const filesize = stats.size / (1024 * 1024);
-
-  // const response = await client.imgur.upload({
-  //   image: readFileSync(image),
-  //   type: "stream",
-  // });
-
-  const file = new AttachmentBuilder(image);
-  const embed = new EmbedBuilder()
-    .setColor(0x0099ff)
-    .setTitle(`${illust.title}`)
-    .setImage(`attachment://${message}.png`);
-
-  return await interaction.editReply({
-    embeds: [embed],
-    files: [file],
-  });
+    return await interaction.editReply({
+      embeds: [embed],
+      files: [file],
+    });
+  }
 });
