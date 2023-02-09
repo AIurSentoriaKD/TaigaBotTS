@@ -3,9 +3,8 @@ import {
   EmbedBuilder,
   AttachmentBuilder,
 } from "discord.js";
+
 import { command } from "../../utils";
-import Pixiv from "pixiv.ts";
-import keys from "../../keys";
 const meta = new SlashCommandBuilder()
   .setName("pixivid")
   .setDescription("Seach pixiv image by ID")
@@ -13,22 +12,44 @@ const meta = new SlashCommandBuilder()
     option.setName("id").setDescription("Id to search").setRequired(true)
   );
 
-export default command(meta, async ({ interaction }) => {
+export default command(meta, async ({ interaction, client }) => {
   await interaction.deferReply();
-
   const message = interaction.options.getInteger("id");
-
-  const pixiv = await Pixiv.refreshLogin(keys.pixivRefresh);
-  const illust = await pixiv.illust.get(
+  const illust: any = await client.pixiv.illust.get(
     `https://www.pixiv.net/en/artworks/${message}`
   );
-  const image = await pixiv.util.downloadIllust(
-    `https://www.pixiv.net/en/artworks/${message}`,
-    "./illust",
-    "large"
-  );
-  //console.log(image);
-  //console.log(illust);
+
+  let image: any;
+  if (illust.page_count < 2) {
+    image = await client.pixiv.util.downloadIllust(
+      `https://www.pixiv.net/en/artworks/${message}`,
+      "./illust",
+      "large"
+    );
+  } else {
+    image = await client.pixiv.util.downloadIllusts(
+      `https://www.pixiv.net/en/artworks/${message}`,
+      "./illust",
+      "large",
+      [{ folder: `${message}`, tag: `${message}` }]
+    );
+  }
+
+  // const files = readdirSync(image.split(".")[0]);
+  // const filePaths = files.map((file) => path.join(image.split(".")[0], file));
+
+  // const times = metadata.ugoira_metadata.frames.map((frame) => frame.delay);
+
+  // const imageWebp = await client.pixiv.util.encodeAnimatedWebp(filePaths, times);
+  // console.log(imageWebp);
+  // const stats = statSync(image);
+  // const filesize = stats.size / (1024 * 1024);
+
+  // const response = await client.imgur.upload({
+  //   image: readFileSync(image),
+  //   type: "stream",
+  // });
+
   const file = new AttachmentBuilder(image);
   const embed = new EmbedBuilder()
     .setColor(0x0099ff)

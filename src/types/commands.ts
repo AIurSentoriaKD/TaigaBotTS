@@ -1,14 +1,14 @@
 import {
   Awaitable,
-  Client,
   ChatInputCommandInteraction,
   SlashCommandBuilder,
 } from "discord.js";
-
+import { Taiga } from "./taiga";
 type LoggerFunction = (...args: unknown[]) => void;
+
 export interface CommandProps {
   interaction: ChatInputCommandInteraction;
-  client: Client;
+  client: Taiga;
   log: LoggerFunction;
 }
 

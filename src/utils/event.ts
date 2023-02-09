@@ -1,6 +1,6 @@
 import { Event, EventExec, EventKeys } from "../types";
-import { Client } from "discord.js";
-
+import { Taiga } from "../types";
+import Pixiv from "pixiv.ts";
 export function event<T extends EventKeys>(
   id: T,
   exec: EventExec<T>
@@ -11,7 +11,10 @@ export function event<T extends EventKeys>(
   };
 }
 
-export function registerEvents(client: Client, events: Event<any>[]): void {
+export function registerEvents(
+  client: Taiga,
+  events: Event<any>[]
+): void {
   for (const event of events)
     client.on(event.id, async (...args) => {
       // Create Props

@@ -1,14 +1,26 @@
-import { Client, GatewayIntentBits } from "discord.js";
-import Pixiv from "pixiv.ts";
+import { GatewayIntentBits } from "discord.js";
 import { registerEvents } from "../utils";
 import events from "../events";
 import keys from "../keys";
-
+import Pixiv from "pixiv.ts";
+import { ImgurClient } from "imgur";
+import { Taiga } from "../types";
 
 const init = async () => {
-  const taiga: Client = new Client({
-    intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers],
+  const pixiv = await Pixiv.refreshLogin(keys.pixivRefresh);
+  const imgurClient = new ImgurClient({
+    clientId: keys.imgurClient,
+    clientSecret: keys.imgurSecret,
+    refreshToken: keys.imgurRefresh,
+    accessToken: keys.imgurToken,
   });
+
+  const taiga: Taiga = new Taiga(
+    {
+      intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers],
+    },
+    pixiv
+  );
 
   registerEvents(taiga, events);
 

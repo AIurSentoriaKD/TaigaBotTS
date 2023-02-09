@@ -1,14 +1,11 @@
 import commands from "../../commands";
 import { Command } from "../../types";
-import PixivApi from "../../utils/pixiv";
 import { EditReply, event, Reply } from "../../utils";
 
 const allCommands = commands.map(({ commands }) => commands).flat();
 const allCommandsMap = new Map<string, Command>(
   allCommands.map((c) => [c.meta.name, c])
 );
-
-
 
 export default event(
   "interactionCreate",
