@@ -10,6 +10,10 @@ const keys: Keys = {
   imgurToken: process.env.IMGUR_TOKEN ?? "nil",
   imgurSecret: process.env.IMGUR_SECRET ?? "nil",
   imgurRefresh: process.env.IMGUR_REFRESH ?? "nil",
+  mysqlServer: process.env.MYSQL_SERVER ?? "nil",
+  mysqlUser: process.env.MYSQL_USER ?? "nil",
+  mysqlPass: process.env.MYSQL_PASSWORD ?? "nil",
+  mysqlDatabase: process.env.MYSQL_DATABASE ?? "nil",
 };
 
 if (Object.values(keys).includes("nil")) {

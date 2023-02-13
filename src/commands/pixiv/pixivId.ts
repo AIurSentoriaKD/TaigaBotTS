@@ -4,7 +4,6 @@ import {
   AttachmentBuilder,
 } from "discord.js";
 import { statSync } from "fs";
-import { PixivIllust } from "pixiv.ts";
 
 import { command, EmbedIllust } from "../../utils";
 const meta = new SlashCommandBuilder()

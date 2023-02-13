@@ -8,4 +8,8 @@ export interface Keys {
   imgurToken: string;
   imgurSecret: string;
   imgurRefresh: string;
+  mysqlServer: string;
+  mysqlUser: string;
+  mysqlPass: string;
+  mysqlDatabase: string;
 }
