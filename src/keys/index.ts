@@ -2,6 +2,7 @@ import { Keys } from "../types";
 
 const keys: Keys = {
   clientToken: process.env.CLIENT_TOKEN ?? "nil",
+  openAiToken: process.env.OPENAI_TOKEN ?? "nil",
   testGuild: process.env.TEST_GUILD ?? "nil",
   pixivRefresh: process.env.PIXIV_TOKEN ?? "nil",
   imgurClient: process.env.IMGUR_CLIENT ?? "nil",
