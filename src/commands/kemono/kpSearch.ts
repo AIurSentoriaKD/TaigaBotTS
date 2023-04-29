@@ -27,7 +27,7 @@ export default command(meta, async ({ interaction, client }) => {
   const artistName: any = interaction.options.getString("artist");
   if (!artistName) return await interaction.editReply({ content: "Nombre?" });
   const browser = await puppeteer.launch({
-    headless: true,
+    headless: "new",
   });
   const page = await browser.newPage();
   await page.goto(`https://kemono.party/artists`, {
