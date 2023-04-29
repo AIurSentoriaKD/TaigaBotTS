@@ -35,7 +35,7 @@ export default command(meta, async ({ interaction, client }) => {
   const artistId = interaction.options.getInteger("id");
   const serviceName = interaction.options.getString("service");
   const browser = await puppeteer.launch({
-    headless: true,
+    headless: "new",
   });
   const page = await browser.newPage();
   await page.goto(`https://kemono.party/${serviceName}/user/${artistId}`, {

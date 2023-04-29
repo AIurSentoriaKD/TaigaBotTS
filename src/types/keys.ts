@@ -1,5 +1,6 @@
 export interface Keys {
   clientToken: string;
+  openAiToken: string;
   testGuild: string;
   pixivRefresh: string;
   imgurClient: string;

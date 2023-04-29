@@ -43,7 +43,7 @@ export default command(meta, async ({ interaction, client }) => {
   const serviceName = interaction.options.getString("service");
 
   const browser = await puppeteer.launch({
-    headless: true,
+    headless: "new",
   });
   const page = await browser.newPage();
   await page.goto(

@@ -34,5 +34,7 @@ export class Taiga extends Client {
     const result = await this.mysql.execute(proc, params);
     return result[0][0];
   }
-
+  async imageFolderCreator(){
+    
+  }
 }

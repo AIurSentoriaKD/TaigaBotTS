@@ -6,6 +6,7 @@ import Pixiv from "pixiv.ts";
 import { ImgurClient } from "imgur";
 import { Taiga } from "../types";
 import mysql from "mysql2";
+import { Configuration } from "openai";
 const init = async () => {
   const pixiv = await Pixiv.refreshLogin(keys.pixivRefresh);
   const imgurClient = new ImgurClient({
@@ -20,10 +21,17 @@ const init = async () => {
   //   password: keys.mysqlPass,
   //   database: keys.mysqlDatabase,
   // });
-
+  const configuration = new Configuration({
+    apiKey: keys.openAiToken,
+  });
   const taiga: Taiga = new Taiga(
     {
-      intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers],
+      intents: [
+        GatewayIntentBits.Guilds,
+        GatewayIntentBits.GuildMembers,
+        GatewayIntentBits.GuildMessages,
+        GatewayIntentBits.MessageContent,
+      ],
     },
     pixiv,
     null
