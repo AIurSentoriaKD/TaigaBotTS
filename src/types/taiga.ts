@@ -1,6 +1,8 @@
 import Pixiv from "pixiv.ts";
 import { Client } from "discord.js";
 import { promisify } from "util";
+//import { ImgurClient } from "imgur";
+
 export class Taiga extends Client {
   pixiv: Pixiv;
   lastIllustID: number;
@@ -34,7 +36,5 @@ export class Taiga extends Client {
     const result = await this.mysql.execute(proc, params);
     return result[0][0];
   }
-  async imageFolderCreator(){
-    
-  }
+  async imageFolderCreator() {}
 }

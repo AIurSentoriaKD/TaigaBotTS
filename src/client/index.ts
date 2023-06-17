@@ -3,27 +3,33 @@ import { registerEvents } from "../utils";
 import events from "../events";
 import keys from "../keys";
 import Pixiv from "pixiv.ts";
-import { ImgurClient } from "imgur";
 import { Taiga } from "../types";
 import mysql from "mysql2";
-import { Configuration } from "openai";
+
+//import { ImgurClient } from "imgur";
+// import { Configuration } from "openai";
+
 const init = async () => {
   const pixiv = await Pixiv.refreshLogin(keys.pixivRefresh);
-  const imgurClient = new ImgurClient({
-    clientId: keys.imgurClient,
-    clientSecret: keys.imgurSecret,
-    refreshToken: keys.imgurRefresh,
-    accessToken: keys.imgurToken,
-  });
-  // const connection = mysql.createConnection({
-  //   host: keys.mysqlServer,
-  //   user: keys.mysqlUser,
-  //   password: keys.mysqlPass,
-  //   database: keys.mysqlDatabase,
+
+  // const imgurClient = new ImgurClient({
+  //   clientId: keys.imgurClient,
+  //   clientSecret: keys.imgurSecret,
+  //   refreshToken: keys.imgurRefresh,
+  //   accessToken: keys.imgurToken,
   // });
-  const configuration = new Configuration({
-    apiKey: keys.openAiToken,
+
+  const mysqlConnection = mysql.createConnection({
+    host: keys.mysqlServer,
+    user: keys.mysqlUser,
+    password: keys.mysqlPass,
+    database: keys.mysqlDatabase,
   });
+
+  // const configuration = new Configuration({
+  //   apiKey: keys.openAiToken,
+  // });
+  
   const taiga: Taiga = new Taiga(
     {
       intents: [
@@ -34,7 +40,7 @@ const init = async () => {
       ],
     },
     pixiv,
-    null
+    mysqlConnection
   );
 
   registerEvents(taiga, events);
