@@ -5,10 +5,10 @@ import keys from "../keys";
 import Pixiv from "pixiv.ts";
 import { Taiga } from "../types";
 import mysql from "mysql2";
+import { Configuration } from "openai";
 
 //import { ImgurClient } from "imgur";
-// import { Configuration } from "openai";
-
+let taiga: Taiga;
 const init = async () => {
   const pixiv = await Pixiv.refreshLogin(keys.pixivRefresh);
 
@@ -26,11 +26,11 @@ const init = async () => {
     database: keys.mysqlDatabase,
   });
 
-  // const configuration = new Configuration({
-  //   apiKey: keys.openAiToken,
-  // });
+  const configuration = new Configuration({
+    apiKey: keys.openAiToken,
+  });
   
-  const taiga: Taiga = new Taiga(
+  taiga = new Taiga(
     {
       intents: [
         GatewayIntentBits.Guilds,
@@ -40,8 +40,11 @@ const init = async () => {
       ],
     },
     pixiv,
-    mysqlConnection
+    mysqlConnection,
+    configuration
   );
+
+  taiga.openAIConversationLoad();
 
   registerEvents(taiga, events);
 
@@ -52,3 +55,9 @@ const init = async () => {
 };
 
 init();
+
+process.on('SIGINT', function() {
+  // console.log("Caught interrupt signal");
+  taiga.sigintActions();
+  process.exit();
+});

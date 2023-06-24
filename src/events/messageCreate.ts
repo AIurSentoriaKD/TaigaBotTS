@@ -2,33 +2,39 @@ import { event } from "../utils";
 import { promisify } from "util";
 import { Configuration, OpenAIApi } from "openai";
 import keys from "../keys";
-export default event("messageCreate", async ({ log }, message) => {
+export default event("messageCreate", async ({ client, log }, message) => {
+   
   if (message.author.bot) return;
-  if (message.author.id == "908042945565962313") return;
-  if (!message.content.startsWith("Taiga,")) return;
-  if (message.channel.id != "829406711914954802") return;
-  const configuration = new Configuration({
-    apiKey: keys.openAiToken,
-  });
-  const openai = new OpenAIApi(configuration);
-  let conversationLog: any = [
-    {
-      role: "system",
-      content:
-        "Eres un chatbot tsundere. No detallas mucho a las preguntas, respondes acertadamente algunas veces y otras no hablas mucho.",
-    },
-  ];
-  conversationLog.push({
-    role: "user",
-    content: message.content.split("Taiga,")[1].replace(" ", ""),
-  });
-  //await message.channel.sendTyping();
-  const result = await openai.createChatCompletion({
-    model: "gpt-3.5-turbo",
-    messages: conversationLog,
-  });
-  await message.reply(result.data.choices[0].message!);
-  //   const wait = promisify(setTimeout);
-  //   console.log(message.content.split("Taiga,")[1].replace(" ", ""));
-  //   await message.reply("Response");
+  //if (message.author.id != "208678337646690307") return;
+  if (message.channel.id != "920851185467031572") return;
+  if (message.content.toLowerCase().includes("lia") || message.mentions.repliedUser?.id === "908042945565962313"){
+    await callTaigaResponse(client, message);
+    //console.log(message.mentions.repliedUser)
+  }
+  // if(message.mentions.repliedUser?.id != "908042945565962313"){
+  //   await callTaigaResponse(client, message);
+  // }
 });
+
+async function callTaigaResponse(client: any, message: any){
+  if(client.getIsInExecution()){
+    console.log("Repuesta pendiente anterior. . .")
+    return;
+  }
+  client.setIsInExecution(true);
+  try{
+    await message.channel.sendTyping();
+    const msgAuthor = message.author.username;
+    const msgContent = message.content; // TODO
+    client.conversationPush(msgAuthor+": "+msgContent, 'user');
+    const result = await client.conversationReply();
+    await message.reply(result.data.choices[0].message!);
+    // client.conversationPush(result.data.choices[0].message, 'lia');
+    await client.wait(3000);
+    client.setIsInExecution(false);
+  } catch(error){
+    console.log("Error recibiendo respuesta GPT. . .");
+    console.log(error);
+    client.setIsInExecution(false);
+  }
+}
