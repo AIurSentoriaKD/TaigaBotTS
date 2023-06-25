@@ -28,9 +28,16 @@ async function callTaigaResponse(client: any, message: any){
     const msgContent = message.content; // TODO
     client.conversationPush(msgAuthor+": "+msgContent, 'user');
     const result = await client.conversationReply();
-    await message.reply(result.data.choices[0].message!);
-    // client.conversationPush(result.data.choices[0].message, 'lia');
+
+    let responseLia: string = result.data.choices[0].message!;
+
+    await message.reply(responseLia);
+
+    client.historyLogPush(msgAuthor+": "+msgContent, 'user');
+    client.historyLogPush(responseLia, 'assistant');
+    
     await client.wait(3000);
+    
     client.setIsInExecution(false);
   } catch(error){
     console.log("Error recibiendo respuesta GPT. . .");

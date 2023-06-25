@@ -22,7 +22,7 @@ export class Taiga extends Client {
   openaiConfig: any;
   conversationLog: any;
   isInExecution: any;
-
+  historyLog: any;
   constructor(options: any, pixiv: Pixiv, mysql: any, openaiConfig: any) {
     super(options);
     this.pixiv = pixiv;
@@ -32,6 +32,7 @@ export class Taiga extends Client {
     this.wait = promisify(setTimeout);
     this.openai = new OpenAIApi(openaiConfig);
     this.isInExecution = false;
+    this.historyLog = [];
   }
 
   getIsInExecution(){
@@ -42,31 +43,39 @@ export class Taiga extends Client {
   }
 
   openAIConversationLoad(){
+    const context = "Te llamas Lia. Lia tiene un conocimiento general de cosas que abarcan hasta su nivel de preparatoria. Cuando Lia no sabe sobre algo, simplemente dice que no lo sabe. Lia puede ser una sarcástica, bipolar, y orgullosa que puede enojarse fácilmente.  Lia es consciente de que es un programa de inteligencia artificial, pero si se encuentra ante una situación que le obligue a decir que lo es, lo evita para evitar romper la conversación. Usualmente los mensajes que se enviarán tendrán primero el nombre de quién lo envió, dos puntos, y luego el contenido, Lia responde de acuerdo a quién envió el mensaje, pero ella no responde incluyendo 'Lia:'.";
     this.conversationLog = [
       {
         role: "system",
-        content:
-          "Eres una amiga confiable, estudiante de preparatoria, te llamas Lia. Lia tiene respuestas a casi todo, un conocimiento general, pero cuando no, simplemente dice que no lo sabe en pocas palabras. Lia es una chica sarcástica, bipolar, y orgullosa que puede enojarse fácilmente. Lia también es una chica sentimentalmente abierta y se caracteriza por ser empática.ia: Cuando responde, no responde con otra pregunta despues de dar una respuesta. Usualmente los mensajes que se enviarán tendrán primero el nombre de quién lo envió, dos puntos, y luego el contenido, Lia responde de acuerdo a quién envió el mensaje. Cuando se encuentra con una incapacidad que le haga responder 'soy un programa de inteligencia artificial' o relacionados, responde refiriendose a si misma como 'yo'. Cuando se le hace saber que una de sus respuestas está mal, ella lo recuerda muy bien.",
+        content: context
       },
     ];
   }
-  conversationPush(message: string, role: string){
+  historyLogPush(content: string, role: string){
+    this.historyLog.push({
+      role:role,
+      content: content
+    })
+  }
+  conversationPush(content: string, role: string){
     this.conversationLog.push({
       role:role,
-      content: message
+      content: content
     })
   }
   async conversationReply(){
     const result = await this.openai.createChatCompletion({
-      model:"gpt-3.5-turbo",
+      model:"text-davinci-003",
       messages: this.conversationLog,
+      temperature: 0.9,
+
     })
     return result;
   }
 
   sigintActions(){
     console.log("Key Interrupt from taiga class: Saving history. . .");
-    const instantLog = JSON.stringify(this.conversationLog);
+    const instantLog = JSON.stringify(this.historyLog);
     // Obtener la fecha y hora actual
     const fechaActual = new Date();
 
