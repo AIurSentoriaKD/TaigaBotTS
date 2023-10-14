@@ -4,7 +4,7 @@ import {
   AttachmentBuilder,
   TextChannel,
 } from "discord.js";
-import { command } from "../../utils";
+import { artistSearch, command } from "../../utils";
 import * as puppeteer from "puppeteer";
 import { Pagination } from "discordjs-button-embed-pagination";
 import { chunk } from "../../utils";
@@ -26,50 +26,7 @@ export default command(meta, async ({ interaction, client }) => {
   await interaction.deferReply();
   const artistName: any = interaction.options.getString("artist");
   if (!artistName) return await interaction.editReply({ content: "Nombre?" });
-  const browser = await puppeteer.launch({
-    headless: "new",
-  });
-  const page = await browser.newPage();
-  await page.goto(`https://kemono.party/artists`, {
-    waitUntil: "networkidle2",
-  });
-  await page.type("#q", artistName);
-
-  await client.wait(500);
-
-  const artistsData = await page.evaluate(() => {
-    const artistsDiv = document.querySelectorAll(".card-list__items a");
-    const artistsAref = document.querySelectorAll(".card-list__items a[href]");
-
-    let output: any[] = [];
-
-    for (let i = 0; i < artistsDiv.length; i++) {
-      const artist: any = artistsDiv[i];
-      const artistInfo = artist.innerText.split(/\r\n|\r|\n/);
-      console.log(artistInfo);
-      output.push({
-        service: artistInfo[0],
-        name: artistInfo[1],
-        favorites: artistInfo[2].split(" ")[0],
-        url: "https://kemono.party" + artistsAref[i].getAttribute("href"),
-        id: artistsAref[i].getAttribute("href")?.split("/").at(-1),
-      });
-    }
-
-    // let artists: string[] = [];
-    // let artistsLink: string[] = [];
-
-    // artistsAref.forEach((a: any) => artistsLink.push(a.getAttribute("href")));
-
-    // artistsDiv.forEach((artist: any) => {
-    //   artists.push(artist.innerText.split(/\r\n|\r|\n/));
-    // });
-
-    return output;
-  });
-  page.close();
-  browser.close();
-
+  const artistsData = await artistSearch(artistName, client, "interaction");
   if (artistsData.length > 5) {
     const chunks = chunk(artistsData, 5);
     const embeds = chunks.map((chunk, index) => {
@@ -84,10 +41,12 @@ export default command(meta, async ({ interaction, client }) => {
       embed.setTimestamp();
       embed.setFooter({
         iconURL: interaction.user.displayAvatarURL().toString(),
-        text: `Total Results: ${artistsData.length} | Page ${index+1} of ${chunks.length}`,
+        text: `Total Results: ${artistsData.length} | Page ${index + 1} of ${
+          chunks.length
+        }`,
       });
       for (let i = 0; i < chunk.length; i++) {
-        const element = chunk[i];
+        const element: any = chunk[i];
         embed.addFields({
           name: `Service: ${element.service} || ID: ${element.id} `,
           value: `[${element.name}](${element.url})`,
@@ -95,7 +54,7 @@ export default command(meta, async ({ interaction, client }) => {
       }
       return embed;
     });
-    await interaction.editReply('Results. . .');
+    await interaction.editReply("Results. . .");
     return await new Pagination(
       interaction.channel as TextChannel,
       embeds,

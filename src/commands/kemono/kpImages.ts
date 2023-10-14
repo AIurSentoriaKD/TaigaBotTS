@@ -4,7 +4,7 @@ import {
   AttachmentBuilder,
   TextChannel,
 } from "discord.js";
-import { command } from "../../utils";
+import { command, imageDeliver } from "../../utils";
 import * as puppeteer from "puppeteer";
 import { Pagination } from "discordjs-button-embed-pagination";
 const meta = new SlashCommandBuilder()
@@ -38,60 +38,16 @@ const meta = new SlashCommandBuilder()
 
 export default command(meta, async ({ interaction, client }) => {
   await interaction.deferReply();
-  const artistId = interaction.options.getInteger("userid");
-  const postId = interaction.options.getInteger("postid");
-  const serviceName = interaction.options.getString("service");
+  const artistId: any = interaction.options.getInteger("userid");
+  const postId: any = interaction.options.getInteger("postid");
+  const serviceName: any = interaction.options.getString("service");
 
-  const browser = await puppeteer.launch({
-    headless: "new",
-  });
-  const page = await browser.newPage();
-  await page.goto(
-    `https://kemono.party/${serviceName}/user/${artistId}/post/${postId}`
-  );
-  const grabData = await page.evaluate(() => {
-    const artistName =
-      document.querySelector<HTMLElement>(".post__user-name")?.innerText;
-    const artistProfile = document
-      .querySelector<HTMLElement>(".post__user a[href]")
-      ?.getAttribute("href");
-    const illustTitle =
-      document.querySelectorAll<HTMLElement>(".post__title")[0].innerText;
+  const imagesData = await imageDeliver(artistId,postId,serviceName,client,"interaction");
 
-    const images = Array.from(
-      document.querySelectorAll(".post__thumbnail")
-    ).map((x) => {
-      return [
-        x.querySelector("a[href]")?.getAttribute("href"),
-        x.querySelector("img[src]")?.getAttribute("src"),
-      ];
-    });
-
-    const profileImages = Array.from(
-      document.querySelectorAll(".fancy-image__picture")
-    ).map((img) => {
-      return (
-        "https://kemono.party" +
-        img.querySelector("img[src]")?.getAttribute("src")
-      );
-    });
-
-    const data = {
-      name: artistName,
-      profileLink: "https://kemono.party" + artistProfile,
-      avatar: profileImages,
-      title: illustTitle,
-      images: images,
-    };
-    return data;
-  });
-  page.close();
-  browser.close();
-
-  const embeds = grabData.images.map((image) => {
+  const embeds = imagesData.images.map((image:any) => {
     const embed = new EmbedBuilder();
     embed.setTitle("Kemono Party Image");
-    embed.setDescription(`${grabData.title}`);
+    embed.setDescription(`${imagesData.title}`);
     embed.setColor(0xedd015);
     embed.setAuthor({
       name: "Kemono Party",
@@ -99,15 +55,15 @@ export default command(meta, async ({ interaction, client }) => {
       url: "https://kemono.party/",
     });
     embed.setTimestamp();
-    embed.setThumbnail(`${grabData.avatar[1]}`);
+    embed.setThumbnail(`${imagesData.avatar[1]}`);
     embed.setFooter({
       iconURL: interaction.user.displayAvatarURL().toString(),
-      text: `${grabData.images.length} Images`,
+      text: `${imagesData.images.length} Images`,
     });
     embed.setImage(`https://kemono.party${image[1]}`);
     embed.setFooter({
       iconURL: interaction.user.displayAvatarURL().toString(),
-      text: `Total Images: ${grabData.images.length}`,
+      text: `Total Images: ${imagesData.images.length}`,
     });
     return embed;
   });

@@ -4,3 +4,5 @@ export * from "./replies";
 export * from "./chunk";
 export * from "./interaction";
 export * from "./illustEmbedBuilder";
+export * from "./LangProcess";
+export * from "./kemonoScraper";

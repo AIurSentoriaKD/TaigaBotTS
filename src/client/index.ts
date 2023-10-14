@@ -6,9 +6,12 @@ import Pixiv from "pixiv.ts";
 import { Taiga } from "../types";
 import mysql from "mysql2";
 import { Configuration } from "openai";
+import * as puppeteer from "puppeteer";
 
 //import { ImgurClient } from "imgur";
+console.time("taiga");
 let taiga: Taiga;
+let browser: any;
 const init = async () => {
   const pixiv = await Pixiv.refreshLogin(keys.pixivRefresh);
 
@@ -19,17 +22,20 @@ const init = async () => {
   //   accessToken: keys.imgurToken,
   // });
 
-  const mysqlConnection = mysql.createConnection({
-    host: keys.mysqlServer,
-    user: keys.mysqlUser,
-    password: keys.mysqlPass,
-    database: keys.mysqlDatabase,
-  });
-
-  const configuration = new Configuration({
+  // const mysqlConnection = mysql.createConnection({
+  //   host: keys.mysqlServer,
+  //   user: keys.mysqlUser,
+  //   password: keys.mysqlPass,
+  //   database: keys.mysqlDatabase,
+  // });
+  const loadOpenAi = false;
+  const openaiConfig = new Configuration({
     apiKey: keys.openAiToken,
   });
-  
+  browser = await puppeteer.launch({
+    headless: "new",
+  });
+  const webView = await browser.newPage();
   taiga = new Taiga(
     {
       intents: [
@@ -40,8 +46,10 @@ const init = async () => {
       ],
     },
     pixiv,
-    mysqlConnection,
-    configuration
+    null,
+    openaiConfig,
+    webView,
+    loadOpenAi
   );
 
   taiga.openAIConversationLoad();
@@ -56,8 +64,10 @@ const init = async () => {
 
 init();
 
-process.on('SIGINT', function() {
+process.on("SIGINT", function () {
   // console.log("Caught interrupt signal");
   taiga.sigintActions();
-  process.exit();
+  browser.close();
+  console.timeEnd("taiga");
+  //process.exit();
 });
