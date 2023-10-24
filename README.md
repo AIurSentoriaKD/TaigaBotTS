@@ -28,4 +28,4 @@ De momento, esta versión de Taiga aún se encuentra en desarrollo. Pero puedes 
 
 ## Contribuciones y Desarrollo
 
-¡Estoy abirto a contribuciones! Si deseas mejorar Taiga o agregar nuevas características, puedes contactarme por discord: miraiur. Tu ayuda es bienvenida.
+¡Estoy abierto a contribuciones! Si deseas mejorar Taiga o agregar nuevas características, puedes contactarme por discord: miraiur. Tu ayuda es bienvenida.
