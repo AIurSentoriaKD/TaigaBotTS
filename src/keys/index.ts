@@ -1,24 +1,24 @@
 import { Keys } from "../types";
 
 const keys: Keys = {
-  clientToken: process.env.CLIENT_TOKEN ?? "nil",
-  openAiToken: process.env.OPENAI_TOKEN ?? "nil",
-  openAiOrganization: process.env.OPENAI_ORGANIZATION ?? "nil",
-  testGuild: process.env.TEST_GUILD ?? "nil",
-  pixivRefresh: process.env.PIXIV_TOKEN ?? "nil",
-  imgurClient: process.env.IMGUR_CLIENT ?? "nil",
-  imgurEmail: process.env.IMGUR_EMAIL ?? "nil",
-  imgurPass: process.env.IMGUR_PASS ?? "nil",
-  imgurToken: process.env.IMGUR_TOKEN ?? "nil",
-  imgurSecret: process.env.IMGUR_SECRET ?? "nil",
-  imgurRefresh: process.env.IMGUR_REFRESH ?? "nil",
-  mysqlServer: process.env.MYSQL_SERVER ?? "nil",
-  mysqlUser: process.env.MYSQL_USER ?? "nil",
-  mysqlPass: process.env.MYSQL_PASSWORD ?? "nil",
-  mysqlDatabase: process.env.MYSQL_DATABASE ?? "nil",
+  clientToken: process.env.CLIENT_TOKEN ?? "NULL",
+  openAiToken: process.env.OPENAI_TOKEN ?? "NULL",
+  openAiOrganization: process.env.OPENAI_ORGANIZATION ?? "NULL",
+  testGuild: process.env.TEST_GUILD ?? "NULL",
+  pixivRefresh: process.env.PIXIV_TOKEN ?? "NULL",
+  imgurClient: process.env.IMGUR_CLIENT ?? "NULL",
+  imgurEmail: process.env.IMGUR_EMAIL ?? "NULL",
+  imgurPass: process.env.IMGUR_PASS ?? "NULL",
+  imgurToken: process.env.IMGUR_TOKEN ?? "NULL",
+  imgurSecret: process.env.IMGUR_SECRET ?? "NULL",
+  imgurRefresh: process.env.IMGUR_REFRESH ?? "NULL",
+  mysqlServer: process.env.MYSQL_SERVER ?? "NULL",
+  mysqlUser: process.env.MYSQL_USER ?? "NULL",
+  mysqlPass: process.env.MYSQL_PASSWORD ?? "NULL",
+  mysqlDatabase: process.env.MYSQL_DATABASE ?? "NULL",
 };
 
-if (Object.values(keys).includes("nil")) {
+if (Object.values(keys).includes("NULL")) {
   throw new Error("Not ENV var defined.");
 }
 

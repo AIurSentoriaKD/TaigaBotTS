@@ -2,6 +2,7 @@ import { WordTokenizer } from 'natural'
 
 export function wordExtract(message: string) {
     let tokenizer = new WordTokenizer();
+    //TODO
     return tokenizer.tokenize(message);
 }
 export function actionCaller() {}
