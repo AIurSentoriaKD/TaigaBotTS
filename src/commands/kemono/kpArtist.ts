@@ -35,7 +35,12 @@ export default command(meta, async ({ interaction, client }) => {
   const artistId: any = interaction.options.getInteger("id");
   const serviceName: any = interaction.options.getString("service");
 
-  const [illustsObject, artistImage] = await artistInfo(artistId, serviceName, client, "interaction");
+  const [illustsObject, artistImage] = await artistInfo(
+    artistId,
+    serviceName,
+    client,
+    "interaction"
+  );
 
   if (illustsObject.length > 5) {
     const chunks = chunk(illustsObject, 5);
@@ -44,13 +49,14 @@ export default command(meta, async ({ interaction, client }) => {
       embed.setTitle("Artist");
       embed.setAuthor({
         name: `Kemono Party`,
-        iconURL: "https://kemono.party/static/klogo.png",
-        url: "https://kemono.party/",
+        iconURL: "https://kemono.su/static/klogo.png",
+        url: "https://kemono.su/",
       });
       embed.setDescription(
         `[${chunk[0].artistName}](${chunk[0].artistUrl}) || ${serviceName}`
       );
-      embed.setThumbnail(`https://kemono.party${artistImage}`);
+      embed.setThumbnail(`https:${artistImage}`);
+      //console.log(artistImage);
       embed.setColor(0xedd015);
       embed.setTimestamp();
       embed.setFooter({

@@ -3,7 +3,7 @@ export async function artistSearch(
   client: any,
   actionType: string
 ) {
-  await client.webView.goto(`https://kemono.party/artists`, {
+  await client.webView.goto(`https://kemono.su/artists`, {
     waitUntil: "networkidle2",
   });
   await client.webView.type("#q", artistName);
@@ -22,7 +22,7 @@ export async function artistSearch(
         service: artistInfo[0],
         name: artistInfo[1],
         favorites: artistInfo[2].split(" ")[0],
-        url: "https://kemono.party" + artistsAref[i].getAttribute("href"),
+        url: "https://kemono.su" + artistsAref[i].getAttribute("href"),
         id: artistsAref[i].getAttribute("href")?.split("/").at(-1),
       });
     }
@@ -52,7 +52,7 @@ export async function artistInfo(
   actionType: string
 ) {
   await client.webView.goto(
-    `https://kemono.party/${serviceName}/user/${artistId}`,
+    `https://kemono.su/${serviceName}/user/${artistId}`,
     {
       waitUntil: "networkidle2",
     }
@@ -110,11 +110,11 @@ export async function artistInfo(
     const illust = {
       artistId: artistId,
       artistName: artistName,
-      artistUrl: "https://kemono.party/fanbox/user/" + artistId,
+      artistUrl: "https://kemono.su/fanbox/user/" + artistId,
       title: illustTitles[i],
       date: illustDates[i],
       attachmentsCount: illustAttachments[i],
-      pageUrl: "https://kemono.party" + illustRefs[i],
+      pageUrl: "https://kemono.su" + illustRefs[i],
       postId: illustRefs[i].split("/").at(-1),
     };
     illustsObject.push(illust);
@@ -134,7 +134,7 @@ export async function imageDeliver(
   actionType: string
 ) {
   await client.webView.goto(
-    `https://kemono.party/${serviceName}/user/${artistId}/post/${postId}`
+    `https://kemono.su/${serviceName}/user/${artistId}/post/${postId}`
   );
   const grabData = await client.webView.evaluate(() => {
     const artistName =
@@ -158,14 +158,14 @@ export async function imageDeliver(
       document.querySelectorAll(".fancy-image__picture")
     ).map((img) => {
       return (
-        "https://kemono.party" +
+        "https://kemono.su" +
         img.querySelector("img[src]")?.getAttribute("src")
       );
     });
 
     const data = {
       name: artistName,
-      profileLink: "https://kemono.party" + artistProfile,
+      profileLink: "https://kemono.su" + artistProfile,
       avatar: profileImages,
       title: illustTitle,
       images: images,

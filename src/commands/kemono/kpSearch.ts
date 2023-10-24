@@ -34,8 +34,8 @@ export default command(meta, async ({ interaction, client }) => {
       embed.setTitle("Kemono Party Search");
       embed.setAuthor({
         name: "Kemono Party",
-        iconURL: "https://kemono.party/static/klogo.png",
-        url: "https://kemono.party/",
+        iconURL: "https://kemono.su/static/klogo.png",
+        url: "https://kemono.su/",
       });
       embed.setColor(0xedd015);
       embed.setTimestamp();
@@ -66,8 +66,8 @@ export default command(meta, async ({ interaction, client }) => {
     embed.setTitle("Kemono Party Search");
     embed.setAuthor({
       name: "Kemono Party",
-      iconURL: "https://kemono.party/static/klogo.png",
-      url: "https://kemono.party/",
+      iconURL: "https://kemono.su/static/klogo.png",
+      url: "https://kemono.su/",
     });
     embed.setColor(0xedd015);
     embed.setTimestamp();

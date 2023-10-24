@@ -51,16 +51,18 @@ export default command(meta, async ({ interaction, client }) => {
     embed.setColor(0xedd015);
     embed.setAuthor({
       name: "Kemono Party",
-      iconURL: "https://kemono.party/static/klogo.png",
-      url: "https://kemono.party/",
+      iconURL: "https://kemono.su/static/klogo.png",
+      url: "https://kemono.su/",
     });
     embed.setTimestamp();
+    //console.log(imagesData.avatar[1])
     embed.setThumbnail(`${imagesData.avatar[1]}`);
     embed.setFooter({
       iconURL: interaction.user.displayAvatarURL().toString(),
       text: `${imagesData.images.length} Images`,
     });
-    embed.setImage(`https://kemono.party${image[1]}`);
+    embed.setImage(`https:${image[1]}`);
+    //console.log(`https:${image[1]}`)
     embed.setFooter({
       iconURL: interaction.user.displayAvatarURL().toString(),
       text: `Total Images: ${imagesData.images.length}`,
