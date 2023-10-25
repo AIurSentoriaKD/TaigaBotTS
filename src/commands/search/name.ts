@@ -32,7 +32,7 @@ export default command(meta, async ({ interaction, client }) => {
       return;
     }
   }
-  console.log(urlToSearch);
+  //console.log(urlToSearch);
   await interaction.deferReply();
   try {
     const pageButtons = new ActionRowBuilder()
