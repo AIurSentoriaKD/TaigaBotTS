@@ -30,6 +30,7 @@
     "natural": "^6.5.0",
     "openai": "^3.2.1",
     "pixiv.ts": "^0.4.5",
-    "puppeteer": "^19.6.3"
+    "puppeteer": "^19.6.3",
+    "sagiri": "^3.4.0"
   }
 }

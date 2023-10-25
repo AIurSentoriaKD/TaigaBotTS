@@ -6,6 +6,7 @@ const keys: Keys = {
   openAiOrganization: process.env.OPENAI_ORGANIZATION ?? "NULL",
   testGuild: process.env.TEST_GUILD ?? "NULL",
   pixivRefresh: process.env.PIXIV_TOKEN ?? "NULL",
+  saucenaoToken: process.env.SAUCENAO_TOKEN ?? " NULL",
   imgurClient: process.env.IMGUR_CLIENT ?? "NULL",
   imgurEmail: process.env.IMGUR_EMAIL ?? "NULL",
   imgurPass: process.env.IMGUR_PASS ?? "NULL",

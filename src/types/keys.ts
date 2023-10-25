@@ -4,6 +4,7 @@ export interface Keys {
   openAiOrganization: string;
   testGuild: string;
   pixivRefresh: string;
+  saucenaoToken: string;
   imgurClient: string;
   imgurEmail: string;
   imgurPass: string;
