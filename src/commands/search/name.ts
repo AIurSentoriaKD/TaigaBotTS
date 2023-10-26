@@ -10,7 +10,8 @@ import { command, SauceNaoEmbedBuilder } from "../../utils";
 import sagiri from "sagiri";
 import keys from "../../keys";
 const sauceNao_Client = sagiri(keys.saucenaoToken);
-
+const URLPattern =
+  /^(http(s):\/\/.)[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)$/;
 const meta = new SlashCommandBuilder()
   .setName("name")
   .setDescription("Obtén la fuente de una imagen. si es que la conozco.")
@@ -29,6 +30,9 @@ export default command(meta, async ({ interaction, client }) => {
   } else {
     urlToSearch = interaction.options.getString("url");
     if (!urlToSearch) {
+      return;
+    }
+    if (!URLPattern.test(urlToSearch)) {
       return;
     }
   }
