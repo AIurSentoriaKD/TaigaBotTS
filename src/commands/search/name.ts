@@ -1,11 +1,9 @@
+import { SlashCommandBuilder, ComponentType } from "discord.js";
 import {
-  SlashCommandBuilder,
-  ActionRowBuilder,
-  ButtonBuilder,
-  ButtonStyle,
-  ComponentType,
-} from "discord.js";
-import { command, SauceNaoEmbedBuilder } from "../../utils";
+  command,
+  SauceNaoEmbedBuilder,
+  createPaginationButtons,
+} from "../../utils";
 
 import sagiri from "sagiri";
 import keys from "../../keys";
@@ -33,80 +31,13 @@ export default command(meta, async ({ interaction, client }) => {
       return;
     }
     if (!URLPattern.test(urlToSearch)) {
-      return;
+      return await interaction.reply(``);
     }
   }
   //console.log(urlToSearch);
   await interaction.deferReply();
   try {
-    const pageButtons = new ActionRowBuilder()
-      .addComponents(
-        new ButtonBuilder()
-          .setCustomId("previous")
-          .setLabel("◀")
-          .setStyle(ButtonStyle.Primary)
-      )
-      .addComponents(
-        new ButtonBuilder()
-          .setCustomId("next")
-          .setLabel("▶")
-          .setStyle(ButtonStyle.Primary)
-      )
-      .addComponents(
-        new ButtonBuilder()
-          .setCustomId("links")
-          .setLabel("LINKS")
-          .setStyle(ButtonStyle.Secondary)
-      );
-    // .addComponents(
-    //   new ButtonBuilder()
-    //     .setCustomId("delete")
-    //     .setLabel("🗑️")
-    //     .setStyle(ButtonStyle.Danger)
-    // );
-    const buttonLinks_1 = new ActionRowBuilder()
-      .addComponents(
-        new ButtonBuilder()
-          .setLabel("YANDEX")
-          .setURL(
-            "https://yandex.com/images/search?rpt=imageview&url=" + urlToSearch
-          )
-          .setStyle(ButtonStyle.Link)
-      )
-      .addComponents(
-        new ButtonBuilder()
-          .setLabel("GOOGLE")
-          .setURL(
-            "https://www.google.com/searchbyimage?image_url=" + urlToSearch
-          )
-          .setStyle(ButtonStyle.Link)
-      )
-      .addComponents(
-        new ButtonBuilder()
-          .setLabel("ASCII2D")
-          .setURL("https://ascii2d.net/search/url/" + urlToSearch)
-          .setStyle(ButtonStyle.Link)
-      );
-    const buttonLinks_2 = new ActionRowBuilder()
-      .addComponents(
-        new ButtonBuilder()
-          .setLabel("IMAGE-OPS")
-          .setURL("https://imgops.com/" + urlToSearch)
-          .setStyle(ButtonStyle.Link)
-      )
-      .addComponents(
-        new ButtonBuilder()
-          .setLabel("TINY-EYE")
-          .setURL("https://www.tineye.com/search/?url=" + urlToSearch)
-          .setStyle(ButtonStyle.Link)
-      )
-      .addComponents(
-        new ButtonBuilder()
-          .setCustomId("back")
-          .setLabel("BACK")
-          .setStyle(ButtonStyle.Primary)
-      );
-    const linkButtons = [buttonLinks_1, buttonLinks_2];
+    const [linkButtons, pageButtons] = createPaginationButtons(urlToSearch);
 
     let currentResultPage = 0;
     let currentPage: any;

@@ -6,3 +6,4 @@ export * from "./interaction";
 export * from "./illustEmbedBuilder";
 export * from "./LangProcess";
 export * from "./kemonoScraper";
+export * from "./sauce";

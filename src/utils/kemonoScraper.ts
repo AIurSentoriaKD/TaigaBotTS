@@ -39,7 +39,7 @@ export async function artistSearch(
     return output;
   });
   if (actionType === "gpt") {
-    // TODO: texto formateado para acompañar al mensaje de Lia.
+    // TODO: texto formateado para acompañar al mensaje de Taiga.
     return;
   } else if (actionType === "interaction") {
     return artistsData;
@@ -120,7 +120,7 @@ export async function artistInfo(
     illustsObject.push(illust);
   }
   if (actionType === "gpt") {
-    // TODO: texto formateado para acompañar la respuesta de Lia
+    // TODO: texto formateado para acompañar la respuesta de Taiga
     return;
   } else if (actionType === "interaction") {
     return [illustsObject, artistImage] as any;
