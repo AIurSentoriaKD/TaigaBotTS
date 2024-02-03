@@ -10,11 +10,11 @@ const meta = new SlashCommandBuilder()
       .setDescription("provide the bot a message")
       .setMinLength(1)
       .setMaxLength(2000)
-      .setRequired(false)
+      .setRequired(true)
   );
 
 export default command(meta, ({ interaction }) => {
-  const message = interaction.options.getString("message");
+  const message = interaction.options.get("message")?.value ?? "";
 
   return interaction.reply({
     ephemeral: true,
