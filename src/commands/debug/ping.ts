@@ -18,6 +18,6 @@ export default command(meta, ({ interaction }) => {
 
   return interaction.reply({
     ephemeral: true,
-    content: message ?? "pong",
+    content: "pong",
   });
 });

@@ -5,7 +5,7 @@ import keys from "../keys";
 import Pixiv from "pixiv.ts";
 import { Taiga } from "../types";
 import mysql from "mysql2";
-import { Configuration } from "openai";
+import { OpenAI } from "openai";
 import * as puppeteer from "puppeteer";
 
 //import { ImgurClient } from "imgur";
@@ -29,7 +29,7 @@ const init = async () => {
   //   database: keys.mysqlDatabase,
   // });
   const loadOpenAi = false;
-  const openaiConfig = new Configuration({
+  const openaiConfig = new OpenAI({
     apiKey: keys.openAiToken,
   });
   browser = await puppeteer.launch({

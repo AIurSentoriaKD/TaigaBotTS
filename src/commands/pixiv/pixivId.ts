@@ -15,7 +15,7 @@ const meta = new SlashCommandBuilder()
 
 export default command(meta, async ({ interaction, client }) => {
   await interaction.deferReply();
-  const message = interaction.options.getInteger("id");
+  const message = interaction.options.get("id")?.value;
   const illust: any = await client.pixiv.illust.get(
     `https://www.pixiv.net/en/artworks/${message}`
   );
@@ -28,7 +28,7 @@ export default command(meta, async ({ interaction, client }) => {
 
   //console.log(illust, image);
 
-  let imageDir = `./illust/${illust.id}_p0.png`;
+  let imageDir = `./illust/${illust.id}.png`;
 
   if (illust.page_count == 1) {
     imageDir = `./illust/${illust.id}.png`;
@@ -49,8 +49,8 @@ export default command(meta, async ({ interaction, client }) => {
       imagePath = `./illust/${illust.id}.png`;
       embed.setImage(`attachment://${illust.id}.png`);
     } else {
-      imagePath = `./illust/${illust.id}_p0.png`;
-      embed.setImage(`attachment://${illust.id}_p0.png`);
+      imagePath = `./illust/${illust.id}.png`;
+      embed.setImage(`attachment://${illust.id}.png`);
     }
     file = new AttachmentBuilder(imagePath);
 

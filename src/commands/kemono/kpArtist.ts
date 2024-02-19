@@ -32,8 +32,8 @@ const meta = new SlashCommandBuilder()
 
 export default command(meta, async ({ interaction, client }) => {
   await interaction.deferReply();
-  const artistId: any = interaction.options.getInteger("id");
-  const serviceName: any = interaction.options.getString("service");
+  const artistId: any = interaction.options.get("id")?.value;
+  const serviceName: any = interaction.options.get("service")?.value;
 
   const [illustsObject, artistImage] = await artistInfo(
     artistId,

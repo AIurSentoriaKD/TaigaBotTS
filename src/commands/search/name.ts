@@ -21,12 +21,12 @@ const meta = new SlashCommandBuilder()
   );
 
 export default command(meta, async ({ interaction, client }) => {
-  const imgfile: any = interaction.options.getAttachment("imgfile");
+  const imgfile: any = interaction.options.get("imgfile");
   let urlToSearch: any;
   if (imgfile) {
     urlToSearch = imgfile.url;
   } else {
-    urlToSearch = interaction.options.getString("url");
+    urlToSearch = interaction.options.get("url");
     if (!urlToSearch) {
       return;
     }

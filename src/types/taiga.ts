@@ -4,7 +4,7 @@ import { promisify } from "util";
 import { readFileSync, writeFileSync } from "fs";
 import { join } from "path";
 //import { ImgurClient } from "imgur";
-import { OpenAIApi } from "openai";
+import { OpenAI } from "openai";
 
 function syncWriteFile(filename: string, data: any) {
   writeFileSync(join("./chats", filename), data, {
@@ -38,7 +38,7 @@ export class Taiga extends Client {
     this.lastDate = "";
     this.mysql = mysql;
     this.wait = promisify(setTimeout);
-    this.openai = new OpenAIApi(openaiConfig);
+    this.openai = new OpenAI(openaiConfig);
     this.isInExecution = false;
     this.webView = puppeteer;
     this.openai_enabled = openai_enabled;

@@ -24,7 +24,7 @@ const meta = new SlashCommandBuilder()
   );
 export default command(meta, async ({ interaction, client }) => {
   await interaction.deferReply();
-  const artistName: any = interaction.options.getString("artist");
+  const artistName: any = interaction.options.get("artist")?.value;
   if (!artistName) return await interaction.editReply({ content: "Nombre?" });
   const artistsData = await artistSearch(artistName, client, "interaction");
   if (artistsData.length > 5) {

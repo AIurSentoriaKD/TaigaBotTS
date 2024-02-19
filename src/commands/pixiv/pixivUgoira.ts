@@ -19,18 +19,18 @@ const meta = new SlashCommandBuilder()
 
 export default command(meta, async ({ interaction, client }) => {
   await interaction.deferReply();
-  const message = interaction.options.getInteger("id");
+  const illustID: any = interaction.options.get("id")?.value;
   const illust: any = await client.pixiv.illust.get(
-    `https://www.pixiv.net/en/artworks/${message}`
+    `https://www.pixiv.net/en/artworks/${illustID}`
   );
   console.log("descargando ugoira");
   const ugoira = await client.pixiv.util.downloadZip(
-    `https://www.pixiv.net/en/artworks/${message}`,
+    `https://www.pixiv.net/en/artworks/${illustID}`,
     "./ugoira"
   );
   console.log("Descargado: ", ugoira);
 
-  const metadata = await client.pixiv.ugoira.metadata({ illust_id: message! });
+  const metadata = await client.pixiv.ugoira.metadata({ illust_id: illustID! });
   const frames = metadata.ugoira_metadata.frames;
   //console.log(metadata.ugoira_metadata.frames);
 
@@ -47,12 +47,12 @@ export default command(meta, async ({ interaction, client }) => {
         "-framerate",
         frameRate.toString(),
         `-i`,
-        `./ugoira/${message}/%06d.jpg`,
+        `./ugoira/${illustID}/%06d.jpg`,
         `-c:v`,
         `libvpx`,
         `-b:v`,
         `2500k`,
-        `./ugoira/${message}.webm`,
+        `./ugoira/${illustID}.webm`,
       ]);
       ffmpeg.stdout.on("data", (data) => {
         console.log(`stdout: ${data.toString()}`);
@@ -80,7 +80,7 @@ export default command(meta, async ({ interaction, client }) => {
     });
 
   //   const response = await client.imgur.upload({
-  //     image: readFileSync(`./ugoira/${message}.webm`),
+  //     image: readFileSync(`./ugoira/${illustID}.webm`),
   //     type: "base64",
   //   });
   //   console.log(response);
@@ -109,7 +109,7 @@ export default command(meta, async ({ interaction, client }) => {
       throw error;
     }
   }
-  const webmBuffer = readFileSync(`./ugoira/${message}.webm`);
+  const webmBuffer = readFileSync(`./ugoira/${illustID}.webm`);
   const link = await uploadVideoToImgur(webmBuffer);
   console.log(link);
   //   const embed = new EmbedBuilder()
@@ -128,15 +128,15 @@ export default command(meta, async ({ interaction, client }) => {
   //         // "-framerate",
   //         // metadata.ugoira_metadata.frames[0].delay.toString(),
   //         `-i`,
-  //         // `./ugoira/${message}/%06d.jpg`,
-  //         `./ugoira/${message}.gif`,
+  //         // `./ugoira/${illustID}/%06d.jpg`,
+  //         `./ugoira/${illustID}.gif`,
   //         "-movflags",
   //         "faststart",
   //         "-pix_fmt",
   //         "yuv420p",
   //         "-vf",
   //         `scale=trunc(iw/2)*2:trunc(ih/2)*2`,
-  //         `./ugoira/${message}.mp4`,
+  //         `./ugoira/${illustID}.mp4`,
   //       ]);
   //       ffmpeg.stdout.on("data", (data) => {
   //         console.log(`stdout: ${data.toString()}`);
@@ -156,7 +156,7 @@ export default command(meta, async ({ interaction, client }) => {
   //     });
   //   }
 
-  //   const stats = statSync(`./ugoira/${message}.gif`);
+  //   const stats = statSync(`./ugoira/${illustID}.gif`);
   //   const sizeMB = stats.size / (1024 * 1024);
   //   let extension = "gif";
   //   if (sizeMB > 7) {
@@ -179,7 +179,7 @@ export default command(meta, async ({ interaction, client }) => {
   //   await setTimeout(2000);
 
   //   const response = await client.imgur.upload({
-  //     image: readFileSync(`./ugoira/${message}.${extension}`),
+  //     image: readFileSync(`./ugoira/${illustID}.${extension}`),
   //     type: "stream",
   //   });
 

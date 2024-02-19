@@ -38,13 +38,19 @@ const meta = new SlashCommandBuilder()
 
 export default command(meta, async ({ interaction, client }) => {
   await interaction.deferReply();
-  const artistId: any = interaction.options.getInteger("userid");
-  const postId: any = interaction.options.getInteger("postid");
-  const serviceName: any = interaction.options.getString("service");
+  const artistId: any = interaction.options.get("userid")?.value;
+  const postId: any = interaction.options.get("postid")?.value;
+  const serviceName: any = interaction.options.get("service")?.value;
 
-  const imagesData = await imageDeliver(artistId,postId,serviceName,client,"interaction");
+  const imagesData = await imageDeliver(
+    artistId,
+    postId,
+    serviceName,
+    client,
+    "interaction"
+  );
 
-  const embeds = imagesData.images.map((image:any) => {
+  const embeds = imagesData.images.map((image: any) => {
     const embed = new EmbedBuilder();
     embed.setTitle("Kemono Party Image");
     embed.setDescription(`${imagesData.title}`);
