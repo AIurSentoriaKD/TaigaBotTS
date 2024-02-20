@@ -19,6 +19,9 @@ Taiga puede buscar y mostrar imágenes de diversos sitios de arte y anime, inclu
 - `/kemono <búsqueda>`: Encuentra imágenes en el estilo Kemono relacionadas con la consulta.
 - `/danbooru <búsqueda>`: Muestra imágenes de Danbooru que coincidan con la búsqueda.
 
+### Generación de imagenes con Stable Diffussion
+Usando la api de automatic1111/stable-diffusion-webui permite usar comandos como txt2img para generar una imagen anime o furry.
+- `/txt2img prompt:'1girl, furry, cute'`: Para generar una imagen con el prompt, tiene otros 6 parametros opcionales.
 ### Chat con OpenAI
 Taiga está equipada con el poder de OpenAI, lo que significa que puedes tener conversaciones interesantes y entretenidas con el bot. Simplemente menciona a Taiga y comienza a hablar con ella.
 
