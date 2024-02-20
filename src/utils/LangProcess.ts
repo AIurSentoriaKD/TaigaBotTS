@@ -146,8 +146,8 @@ export async function callTaigaChatResponse(
   message: any,
   textoMensaje: string
 ) {
-  if (!client.openai_enabled)
-    return await message.reply("Taiga no está disponible por el momento.");
+  // if (!client.openai_enabled)
+  //   return await message.reply("Taiga no está disponible por el momento.");
   if (client.getIsInExecution()) {
     console.log("Repuesta pendiente anterior. . .");
     return;

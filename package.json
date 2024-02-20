@@ -20,6 +20,8 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
+    "@book000/pixivts": "^0.27.2",
+    "@ffmpeg-installer/ffmpeg": "^1.1.0",
     "axios": "^1.3.2",
     "cross-env": "^7.0.3",
     "discord.js": "^14.8.0",
@@ -28,8 +30,9 @@
     "imgur": "^1.0.2",
     "mysql2": "^3.1.2",
     "natural": "^6.5.0",
+    "nodejs-base64": "^2.0.0",
     "openai": "^4.28.0",
-    "pixiv.ts": "^0.4.5",
+    "pixiv.ts": "^0.5.9",
     "puppeteer": "^19.6.3",
     "sagiri": "^3.4.0"
   }

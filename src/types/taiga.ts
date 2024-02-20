@@ -22,8 +22,9 @@ export class Taiga extends Client {
   openai: any;
   openaiConfig: any;
   conversationLog: any;
-  isInExecution: any;
+  isInExecution: boolean;
   webView: any;
+  sd_running: boolean;
   constructor(
     options: any,
     pixiv: Pixiv,
@@ -42,12 +43,20 @@ export class Taiga extends Client {
     this.isInExecution = false;
     this.webView = puppeteer;
     this.openai_enabled = openai_enabled;
+    this.sd_running = false;
   }
 
+  getSDStatus() {
+    return this.sd_running;
+  }
+  setSDStatus(value: boolean) {
+    this.sd_running = value;
+  }
+  
   getIsInExecution() {
     return this.isInExecution;
   }
-  setIsInExecution(value: any) {
+  setIsInExecution(value: boolean) {
     this.isInExecution = value;
   }
 

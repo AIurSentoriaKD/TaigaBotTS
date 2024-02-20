@@ -10,7 +10,7 @@ import { Pagination } from "discordjs-button-embed-pagination";
 const meta = new SlashCommandBuilder()
   .setName("kpimages")
   .setDescription(
-    "Gets an artist most recent 5 images. It's recommended to use the other two before."
+    "Gets an artist post. You need to know the user ID, service name, and post ID."
   )
   .addIntegerOption((option) =>
     option

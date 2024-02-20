@@ -1,7 +1,6 @@
 import {
   SlashCommandBuilder,
   EmbedBuilder,
-  AttachmentBuilder,
   TextChannel,
 } from "discord.js";
 import { artistInfo, command } from "../../utils";

@@ -23,6 +23,7 @@ export default command(meta, async ({ interaction, client }) => {
   const illust: any = await client.pixiv.illust.get(
     `https://www.pixiv.net/en/artworks/${illustID}`
   );
+  await client.wait(3000);
   console.log("descargando ugoira");
   const ugoira = await client.pixiv.util.downloadZip(
     `https://www.pixiv.net/en/artworks/${illustID}`,
@@ -43,13 +44,14 @@ export default command(meta, async ({ interaction, client }) => {
 
   async function runFFmpeg(): Promise<Boolean> {
     return new Promise((resolve, reject) => {
-      const ffmpeg = spawn("C:/FFmpeg/bin/ffmpeg", [
+      const ffmpegPath = require("@ffmpeg-installer/ffmpeg").path;
+      const ffmpeg = spawn(ffmpegPath, [
         "-framerate",
         frameRate.toString(),
         `-i`,
         `./ugoira/${illustID}/%06d.jpg`,
-        `-c:v`,
-        `libvpx`,
+        // `-c:v`,
+        // `libvpx`,
         `-b:v`,
         `2500k`,
         `./ugoira/${illustID}.webm`,
@@ -110,15 +112,16 @@ export default command(meta, async ({ interaction, client }) => {
     }
   }
   const webmBuffer = readFileSync(`./ugoira/${illustID}.webm`);
-  const link = await uploadVideoToImgur(webmBuffer);
-  console.log(link);
+  //const link = await uploadVideoToImgur(webmBuffer);
+  //console.log(link);
   //   const embed = new EmbedBuilder()
   //     .setColor(0x0099ff)
   //     .setTitle(`${illust.title}`)
   //     .setImage(`${response.data.link}`);
 
   return await interaction.editReply({
-    content: `${illust.title}, ${time}, ${link}`,
+    content: `${illust.title}, ${time / 1000}s`,
+    files: [`./ugoira/${illustID}.webm`],
     // embeds: [embed],
   });
 

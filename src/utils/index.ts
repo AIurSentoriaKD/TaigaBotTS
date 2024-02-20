@@ -7,3 +7,5 @@ export * from "./illustEmbedBuilder";
 export * from "./LangProcess";
 export * from "./kemonoScraper";
 export * from "./sauce";
+export * from "./SD_Samplers";
+export * from "./SD_Methods";
