@@ -136,7 +136,7 @@ export async function callTaigaCommandName(
 
     client.setIsInExecution(false);
   } catch (error) {
-    console.log("Error recibiendo respuesta GPT. . .");
+    console.log("Error recibiendo respuesta GPT. . . in langprocess");
     console.log(error);
     client.setIsInExecution(false);
   }
@@ -170,7 +170,7 @@ export async function callTaigaChatResponse(
 
     client.setIsInExecution(false);
   } catch (error) {
-    console.log("Error recibiendo respuesta GPT. . .");
+    console.log("Error recibiendo respuesta GPT. . . incallresponse");
     console.log(error);
     client.setIsInExecution(false);
   }

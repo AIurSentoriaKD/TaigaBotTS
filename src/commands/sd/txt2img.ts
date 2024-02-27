@@ -190,8 +190,12 @@ export default command(meta, async ({ interaction, client }) => {
           iconURL: interaction.user.displayAvatarURL(),
         })
         .setDescription(`\`\`\`${positivePrompt}\`\`\``)
+        .addFields({ name: "seed", value: imageMetadata.seed })
         .setTimestamp()
-        .setImage(`attachment://${imageName}`);
+        .setImage(`attachment://${imageName}`)
+        .setFooter({
+          text: "Click en Refine si el resultado te agrada, click en remake para hacer otro ",
+        });
       const imageAtt = new AttachmentBuilder(imageDir);
 
       const refine = new ButtonBuilder()
@@ -270,8 +274,10 @@ export default command(meta, async ({ interaction, client }) => {
               iconURL: interaction.user.displayAvatarURL(),
             })
             .setDescription(`\`\`\`${positivePrompt}\`\`\``)
+            .addFields({ name: "seed", value: imageMetadata.seed })
             .setTimestamp()
             .setImage(`attachment://${refinedImageName}`);
+
           await interaction.editReply({
             content: "",
             files: [refinedAttach],
