@@ -9,7 +9,7 @@ import { OpenAI } from "openai";
 import * as puppeteer from "puppeteer";
 
 //import { ImgurClient } from "imgur";
-console.time("taiga");
+//console.time("taiga");
 let taiga: Taiga;
 let browser: any;
 const init = async () => {
@@ -28,10 +28,12 @@ const init = async () => {
   //   password: keys.mysqlPass,
   //   database: keys.mysqlDatabase,
   // });
-  const loadOpenAi = false;
+  const loadOpenAi = true;
   const openaiConfig = new OpenAI({
-    apiKey: keys.openAiToken,
+    baseURL: "http://localhost:1234/v1",
+    apiKey: "lm-studio",
   });
+
   browser = await puppeteer.launch({
     headless: "new",
   });
@@ -67,7 +69,7 @@ init();
 process.on("SIGINT", function () {
   // console.log("Caught interrupt signal");
   taiga.sigintActions();
-  browser.close();
-  console.timeEnd("taiga");
+  //browser.close();
+  //console.timeEnd("taiga");
   //process.exit();
 });

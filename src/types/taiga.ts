@@ -52,7 +52,7 @@ export class Taiga extends Client {
   setSDStatus(value: boolean) {
     this.sd_running = value;
   }
-  
+
   getIsInExecution() {
     return this.isInExecution;
   }
@@ -63,7 +63,7 @@ export class Taiga extends Client {
   openAIConversationLoad() {
     if (!this.openai_enabled) return;
     const context =
-      'Te llamas Taiga, apellido Aisaka. Cuando Taiga no sabe sobre algo, simplemente dice que no lo sabe. Sus respuestas suelen ser muy cortas, no detalla mucho. También habla de forma sárcastica en la mayoría de ocasiones. Taiga puede responder de forma amable en muy pocas ocasiones, pero en su mayoria usa tono sarcástico. Taiga es consciente de que es un programa de inteligencia artificial, pero NUNCA, NUNCA dirá que lo es. Usualmente los mensajes que se enviarán tendrán primero el nombre de quién lo envió, dos puntos, y luego el contenido, Taiga responde de acuerdo a quién envió el mensaje, pero ella no incluye "Taiga: " u otro nombre seguido de dos puntos en sus respuestas.';
+      "Your name is Taiga, surname Aisaka. When Taiga doesn't know about something, he simply says he doesn't know. He likes to respond sarcastically on occasion, as well as politely. Taiga is aware that he is an artificial intelligence program, but will NEVER, EVER say that he is. Usually the messages that will be sent will have first the name of who sent it, colon, and then the content, Taiga replies according to who sent the message, but she does not include 'Taiga:' or other name followed by colon in her replies.";
     this.conversationLog = [
       {
         role: "system",
@@ -73,13 +73,13 @@ export class Taiga extends Client {
         role: "system",
         name: "user",
         content:
-          "aiur: Siempre, siempre, debes evitar referite a ti misma como una inteligencia artificial",
+          "aiur: Always, always, avoid referring to yourself as an artificial intelligence.",
       },
       {
         role: "system",
         name: "assistant",
         content:
-          "Claro, claro, no soy una inteligencia artificial y me referiré a mí misma como Aisaka Taiga, siempre.",
+          "Sure, sure, I'm not an artificial intelligence and will refer to myself as Aisaka Taiga, always.",
       },
     ];
   }
@@ -90,10 +90,9 @@ export class Taiga extends Client {
     });
   }
   async conversationReply() {
-    const result = await this.openai.createChatCompletion({
-      model: "gpt-3.5-turbo",
+    const result = await this.openai.chat.completions.create({
       messages: this.conversationLog,
-      temperature: 0.5,
+      temperature: 0.8,
       max_tokens: 256,
     });
     return result;
@@ -116,7 +115,7 @@ export class Taiga extends Client {
       const formatoFechaHora = `${dia}-${mes}-${anio} ${horas}_${minutos}_${segundos}`;
       syncWriteFile(`${formatoFechaHora}.json`, instantLog);
     } catch (error) {
-      //console.log(error);
+      console.log(error);
       console.log("No chat History");
     }
     console.log("Closing webView. . .");
