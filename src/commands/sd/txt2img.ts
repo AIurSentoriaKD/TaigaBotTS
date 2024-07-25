@@ -174,7 +174,7 @@ export default command(meta, async ({ interaction, client }) => {
       } catch (error: any) {
         console.log(error);
         return await interaction.editReply({
-          content: error,
+          content: "SD no disponible?",
         });
       }
 

@@ -17,6 +17,8 @@ const keys: Keys = {
   mysqlUser: process.env.MYSQL_USER ?? "NULL",
   mysqlPass: process.env.MYSQL_PASSWORD ?? "NULL",
   mysqlDatabase: process.env.MYSQL_DATABASE ?? "NULL",
+  tmdbKey: process.env.TMDB_API_KEY ?? "NULL",
+  tmdbAPIKey: process.env.TMDB_API_TOKEN ?? "NULL",
 };
 
 if (Object.values(keys).includes("NULL")) {

@@ -2,7 +2,7 @@ import { WordTokenizer } from "natural";
 import { createPaginationButtons } from "./sauce";
 import sagiri from "sagiri";
 import keys from "../keys";
-import { SauceNaoEmbedBuilder } from "./illustEmbedBuilder";
+import { SauceNaoEmbedBuilder } from "./embedbuilders";
 import { ComponentType } from "discord.js";
 
 export function wordExtract(message: string) {
@@ -160,11 +160,13 @@ export async function callTaigaChatResponse(
     client.conversationPush(msgAuthor + ": " + textoMensaje, "user");
 
     const result = await client.conversationReply();
-    let responseTaiga = result.data.choices[0].message;
-    console.log(result.data.choices);
-    await message.reply(responseTaiga.content.split(": ")[1]);
+    console.log(result.choices[0]);
+    let responseTaiga = result.choices[0].message.content;
+    console.log(responseTaiga);
+    //await message.reply(responseTaiga.content.split(": ")[1]);
+    await message.reply(responseTaiga);
 
-    client.conversationPush(responseTaiga.content, "assistant");
+    client.conversationPush(responseTaiga, "assistant");
 
     await client.wait(5000);
 

@@ -1,11 +1,9 @@
 import {
   SlashCommandBuilder,
   EmbedBuilder,
-  AttachmentBuilder,
   TextChannel,
 } from "discord.js";
 import { command, imageDeliver } from "../../utils";
-import * as puppeteer from "puppeteer";
 import { Pagination } from "discordjs-button-embed-pagination";
 const meta = new SlashCommandBuilder()
   .setName("kpimages")
