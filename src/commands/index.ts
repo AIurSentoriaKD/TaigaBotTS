@@ -4,4 +4,5 @@ import pixiv from "./pixiv";
 import kemono from "./kemono";
 import SauceNao from "./search";
 import sd from "./sd";
-export default [debug, general, pixiv, kemono, SauceNao, sd];
+import films from "./films"
+export default [debug, general, pixiv, kemono, SauceNao, sd, films];

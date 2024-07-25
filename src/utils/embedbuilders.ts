@@ -2,6 +2,47 @@ import { EmbedBuilder, AttachmentBuilder, Embed } from "discord.js";
 import { PixivIllust } from "pixiv.ts";
 import https from "https";
 import http from "http";
+function convertToStars(rating: any) {
+  // Verificar que el rating está dentro del rango 1-10
+  if (rating < 1 || rating > 10) {
+    throw new Error("El rating debe estar entre 1 y 10.");
+  }
+
+  // Escalar el rating de 1-10 a 1-5
+  const scaledRating = (rating / 10) * 5;
+
+  // Redondear al número entero más cercano
+  const roundedRating = Math.round(scaledRating);
+
+  // Crear una cadena de estrellas
+  const stars = "⭐".repeat(roundedRating);
+
+  return stars;
+}
+export function EmbedPelicula(infoPeli: any): EmbedBuilder {
+  const embed = new EmbedBuilder();
+  embed.setTitle(infoPeli.title);
+  embed.addFields({ name: "ID", value: `${infoPeli.id_peli}` });
+  embed.addFields({
+    name: "Puntaje",
+    value: `${infoPeli.score ? infoPeli.score:"-"}/10`,
+  });
+  embed.addFields({
+    name: "Año de Estreno",
+    value: `${infoPeli.anio_estreno}`,
+  });
+  try {
+    embed.addFields({
+      name: "Estrellas",
+      value: `${convertToStars(infoPeli.score)}`,
+    });
+  } catch (err) {
+    console.log(err);
+  }
+  embed.setColor(0x0099ff);
+  embed.setImage(infoPeli.portada);
+  return embed;
+}
 export function EmbedIllust(illust: any, userImg: string): EmbedBuilder {
   const tags = illust.tags.map((tag: any) => {
     if (tag.translated_name)

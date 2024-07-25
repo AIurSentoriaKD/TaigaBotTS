@@ -10,6 +10,7 @@ export default event("messageCreate", async ({ client, log }, message) => {
   // if (message.author.id != "208678337646690307") return;
   // if (message.channel.id != "829406711914954802") return;
   if (
+    client.openai_enabled &&
     message.content.toLowerCase().includes("taiga") ||
     message.mentions.repliedUser?.id === "539302272534839296" ||
     message.mentions.users.first()?.id === "539302272534839296"

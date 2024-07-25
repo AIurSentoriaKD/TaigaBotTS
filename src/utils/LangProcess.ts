@@ -2,7 +2,7 @@ import { WordTokenizer } from "natural";
 import { createPaginationButtons } from "./sauce";
 import sagiri from "sagiri";
 import keys from "../keys";
-import { SauceNaoEmbedBuilder } from "./illustEmbedBuilder";
+import { SauceNaoEmbedBuilder } from "./embedbuilders";
 import { ComponentType } from "discord.js";
 
 export function wordExtract(message: string) {
