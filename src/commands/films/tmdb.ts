@@ -6,8 +6,60 @@ import {
     EmbedBuilder,
     SlashCommandBuilder,
 } from "discord.js";
-import { command, genresES, genresEN } from "../../utils";
-
+import { command, genresES, genresEN, EditReply } from "../../utils";
+function buildEmbedFilms(tmdbData: any, genreNames: any) {
+    return tmdbData.results.map((result: any) => {
+        let shortdescription =
+            result.overview.length > 50
+                ? result.overview.slice(0, 50) + "..."
+                : result.overview;
+        return new EmbedBuilder()
+            .setColor(0x0033ff)
+            .setAuthor({ name: "TMDB" })
+            .setThumbnail(
+                "https://cdn.discordapp.com/attachments/285514257980981259/1266087142698778664/XXqfqs9irPSjphsMPcC-c6Q4-FY5cd8klw4IdI2lof_Ie-yXaFirqbNDzK2kJ808WXJk.png"
+            )
+            .setTitle(result.title)
+            .addFields({
+                name: "Año",
+                value: result.release_date,
+                inline: true,
+            })
+            .addFields({
+                name: "Popularidad",
+                value: `${result.popularity}`,
+                inline: true,
+            })
+            .addFields({
+                name: "Descripción",
+                value: `${shortdescription}`,
+            })
+            .addFields({
+                name: "Votos",
+                value: `${result.vote_count}`,
+                inline: true,
+            })
+            .addFields({
+                name: "Votos promedio",
+                value: `${result.vote_average}`,
+                inline: true,
+            })
+            .addFields({
+                name: "Idioma",
+                value: `${result.original_language}`,
+                inline: true,
+            })
+            .addFields({
+                name: "Genero",
+                value: `${genreNames.map((genre: any) => genre).join(" - ")}`,
+            })
+            .setImage(
+                `https://image.tmdb.org/t/p/w600_and_h900_bestv2/${result.poster_path}`
+            )
+            .setAuthor({ name: "TMDB" })
+            .setTimestamp();
+    });
+}
 const meta = new SlashCommandBuilder()
     .setName("tmdb")
     .setDescription(
@@ -36,19 +88,12 @@ export default command(meta, async ({ interaction, client }) => {
         console.log(
             "con la búsqueda hay: ",
             tmdbData.results.length,
-            " peliculas"
+            " peliculas se reducirá a 10"
         );
         if (tmdbData.results.length >= 11) {
             // split results to fit only 10
             tmdbData.results = tmdbData.results.slice(0, 10);
         }
-        //const tmdbDataGenres = await client.tmdb.genres.movies();
-
-        // console.log(tmdbData.results[0]);
-
-        // console.log(tmdbData.results[0].genre_ids);
-
-        // console.log(tmdbDataGenres);
 
         genreNames = genresES
             .filter((genre) => tmdbData.results[0].genre_ids.includes(genre.id))
@@ -62,54 +107,20 @@ export default command(meta, async ({ interaction, client }) => {
                 "Ocurrió un error con la pelicula, ¿tal vez comprobar el nombre ayude?",
         });
     }
-    const embedFilms = tmdbData.results.map((result: any) => {
-        return new EmbedBuilder()
-            .setColor(0x0033ff)
-            .setAuthor({ name: "TMDB" })
-            .setThumbnail(
-                "https://cdn.discordapp.com/attachments/285514257980981259/1266087142698778664/XXqfqs9irPSjphsMPcC-c6Q4-FY5cd8klw4IdI2lof_Ie-yXaFirqbNDzK2kJ808WXJk.png?ex=66a3df09&is=66a28d89&hm=b1511042dec95ce466cb33cf58a4b9d28ca957f0893238341b0e49d280551c5e&"
-            )
-            .setTitle(result.title)
-            .addFields({
-                name: "Año",
-                value: result.release_date,
-                inline: true,
-            })
-            .addFields({
-                name: "Popularidad",
-                value: `${result.popularity}`,
-                inline: true,
-            })
-            .addFields({
-                name: "Descripción",
-                value: `${result.overview}`,
-            })
-            .addFields({
-                name: "Votos",
-                value: `${result.vote_count}`,
-                inline: true,
-            })
-            .addFields({
-                name: "Votos promedio",
-                value: `${result.vote_average}`,
-                inline: true,
-            })
-            .addFields({
-                name: "Idioma",
-                value: `${result.original_language}`,
-                inline: true,
-            })
-            .addFields({
-                name: "Genero",
-                value: `${genreNames.map((genre: any) => genre).join(" - ")}`,
-            })
-            .setImage(
-                `https://image.tmdb.org/t/p/w600_and_h900_bestv2/${result.poster_path}`
-            )
-            .setAuthor({ name: "TMDB" })
-            .setTimestamp();
-    });
-
+    let embedFilms: any;
+    try {
+        embedFilms = buildEmbedFilms(tmdbData, genreNames);
+    } catch (err) {
+        console.log("Error con embedfilms");
+        console.log(err);
+        console.log("reduciendo array aún más");
+        tmdbData.results = tmdbData.results.slice(0, 5);
+        embedFilms = buildEmbedFilms(tmdbData, genreNames);
+        // return await interaction.editReply({
+        //     content: `Error al construir el embed film \`\`\`${err} \`\`\``,
+        // });
+    }
+    console.log("Embed films construido");
     // const embedFilm = new EmbedBuilder()
     //     .setColor(0x0033ff)
     //     .setAuthor({ name: "TMDB" })
@@ -174,7 +185,7 @@ export default command(meta, async ({ interaction, client }) => {
         addToDB,
         nextButton
     );
-
+    console.log("Row construido");
     let selectedFilmIndex = 0;
     try {
         await interaction.editReply({
@@ -188,8 +199,8 @@ export default command(meta, async ({ interaction, client }) => {
                 componentType: ComponentType.Button,
             });
 
-        const collectorFilter = (i: { user: { id: string } }) =>
-            i.user.id === interaction.user.id;
+        // const collectorFilter = (i: { user: { id: string } }) =>
+        //     i.user.id === interaction.user.id;
 
         collector.on("collect", async (i) => {
             if (i.user.id === interaction.user.id) {

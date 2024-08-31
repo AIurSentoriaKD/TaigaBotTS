@@ -50,7 +50,7 @@ export default command(meta, async ({ interaction, client }) => {
         embedPages.push(embedPage);
     }
     // TODO Change dep of embedpagination
-    await interaction.reply({ content: "Cargado" });
+    await interaction.editReply({ content: "Cargado" });
     await interaction.deleteReply();
 
     return await new Pagination(
