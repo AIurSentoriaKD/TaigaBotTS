@@ -17,40 +17,45 @@ export default command(meta, async ({ interaction, client }) => {
     const busqueda: string =
         interaction.options.get("busqueda")?.value?.toString() ?? "";
     if (busqueda.length > 3) {
-        const results = await client.mysql.query(
-            `SELECT * FROM films where title like '%${busqueda}%'`,
-            []
-        );
-        if (results[0].length > 0) {
-            if (results[0].length > 1) {
-                const embeds = results[0].map((result: any) =>
-                    EmbedPelicula(result)
-                );
-                await interaction.editReply({ content: "Cargado" });
-                await interaction.deleteReply();
-                return await new Pagination(
-                    interaction.channel as TextChannel,
-                    embeds,
-                    "page",
-                    60000
-                ).paginate();
+        try {
+            const results = await client.mysql.query(
+                `SELECT * FROM films where title like '%${busqueda}%'`,
+                []
+            );
+            if (results[0].length > 0) {
+                if (results[0].length > 1) {
+                    const embeds = results[0].map((result: any) =>
+                        EmbedPelicula(result)
+                    );
+                    await interaction.editReply({ content: "Cargado" });
+                    await interaction.deleteReply();
+                    return await new Pagination(
+                        interaction.channel as TextChannel,
+                        embeds,
+                        "page",
+                        60000
+                    ).paginate();
+                } else {
+                    const embed = EmbedPelicula(results[0][0]);
+                    return await interaction.editReply({
+                        embeds: [embed],
+                    });
+                }
             } else {
-                const embed = EmbedPelicula(results[0][0]);
-                return await interaction.reply({
-                    embeds: [embed],
+                return await interaction.editReply({
+                    content:
+                        "No se ha encontrado la pelicula. Asegurate de que el nombre de la pelicula este bien escrito.",
                 });
             }
-        } else {
-            return await interaction.reply({
-                content:
-                    "No se ha encontrado la pelicula. Asegurate de que el nombre de la pelicula este bien escrito.",
-                ephemeral: true,
+        } catch (err) {
+            console.log(err);
+            return await interaction.editReply({
+                content: "Error al buscar, ver consola",
             });
         }
     } else {
-        return await interaction.reply({
+        return await interaction.editReply({
             content: "Agrega mas letras a tu búsqueda mongolaso",
-            ephemeral: true,
         });
     }
 });
