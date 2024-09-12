@@ -37,7 +37,10 @@ export function EmbedPelicula(infoPeli: any): EmbedBuilder {
       value: `${convertToStars(infoPeli.score)}`,
     });
   } catch (err) {
-    console.log(err);
+    embed.addFields({
+      name: "Estrellas",
+      value: `Sin calificaciones`,
+    });
   }
   embed.setColor(0x0099ff);
   embed.setImage(infoPeli.portada);
