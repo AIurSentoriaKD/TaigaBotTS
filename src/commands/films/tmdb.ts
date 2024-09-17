@@ -85,12 +85,9 @@ export default command(meta, async ({ interaction, client }) => {
             language: "es-PE",
         });
 
-        console.log(
-            "con la búsqueda hay: ",
-            tmdbData.results.length,
-            " peliculas se reducirá a 10"
-        );
+        console.log("con la búsqueda hay: ", tmdbData.results.length);
         if (tmdbData.results.length >= 11) {
+            console.log("reduciendo array");
             // split results to fit only 10
             tmdbData.results = tmdbData.results.slice(0, 10);
         }
@@ -114,7 +111,8 @@ export default command(meta, async ({ interaction, client }) => {
         console.log("Error con embedfilms");
         console.log(err);
         console.log("reduciendo array aún más");
-        tmdbData.results = tmdbData.results.slice(0, 5);
+        if (tmdbData.results.length >= 5)
+            tmdbData.results = tmdbData.results.slice(0, 5);
         embedFilms = buildEmbedFilms(tmdbData, genreNames);
         // return await interaction.editReply({
         //     content: `Error al construir el embed film \`\`\`${err} \`\`\``,
