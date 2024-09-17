@@ -114,56 +114,8 @@ export default command(meta, async ({ interaction, client }) => {
         if (tmdbData.results.length >= 5)
             tmdbData.results = tmdbData.results.slice(0, 5);
         embedFilms = buildEmbedFilms(tmdbData, genreNames);
-        // return await interaction.editReply({
-        //     content: `Error al construir el embed film \`\`\`${err} \`\`\``,
-        // });
     }
     console.log("Embed films construido");
-    // const embedFilm = new EmbedBuilder()
-    //     .setColor(0x0033ff)
-    //     .setAuthor({ name: "TMDB" })
-    //     .setThumbnail(
-    //         "https://cdn.discordapp.com/attachments/285514257980981259/1266087142698778664/XXqfqs9irPSjphsMPcC-c6Q4-FY5cd8klw4IdI2lof_Ie-yXaFirqbNDzK2kJ808WXJk.png?ex=66a3df09&is=66a28d89&hm=b1511042dec95ce466cb33cf58a4b9d28ca957f0893238341b0e49d280551c5e&"
-    //     )
-    //     .setTitle(tmdbData.results[0].title)
-    //     .addFields({
-    //         name: "Año",
-    //         value: tmdbData.results[0].release_date,
-    //         inline: true,
-    //     })
-    //     .addFields({
-    //         name: "Popularidad",
-    //         value: `${tmdbData.results[0].popularity}`,
-    //         inline: true,
-    //     })
-    //     .addFields({
-    //         name: "Descripción",
-    //         value: `${tmdbData.results[0].overview}`,
-    //     })
-    //     .addFields({
-    //         name: "Votos",
-    //         value: `${tmdbData.results[0].vote_count}`,
-    //         inline: true,
-    //     })
-    //     .addFields({
-    //         name: "Votos promedio",
-    //         value: `${tmdbData.results[0].vote_average}`,
-    //         inline: true,
-    //     })
-    //     .addFields({
-    //         name: "Idioma",
-    //         value: `${tmdbData.results[0].original_language}`,
-    //         inline: true,
-    //     })
-    //     .addFields({
-    //         name: "Genero",
-    //         value: `${genreNames.map((genre: any) => genre).join(" - ")}`,
-    //     })
-    //     .setImage(
-    //         `https://image.tmdb.org/t/p/w600_and_h900_bestv2/${tmdbData.results[0].poster_path}`
-    //     )
-    //     .setAuthor({ name: "TMDB" })
-    //     .setTimestamp();
 
     const addToDB = new ButtonBuilder()
         .setCustomId("save")
@@ -214,12 +166,8 @@ export default command(meta, async ({ interaction, client }) => {
                     embedFilms[selectedFilmIndex].setFooter({
                         text: "Guardada con Taiga!",
                     });
-                    await interaction.editReply({
-                        embeds: [embedFilms[selectedFilmIndex]],
-                        components: [],
-                    });
-                    await client.mysql.query(
-                        "insert into films (title, anio_estreno, portada) values (?,?,?)",
+                    const newFilmID = await client.mysql.query(
+                        "call add_film(?,?,?)",
                         [
                             tmdbData.results[selectedFilmIndex].title,
                             tmdbData.results[
@@ -228,7 +176,19 @@ export default command(meta, async ({ interaction, client }) => {
                             `https://image.tmdb.org/t/p/w600_and_h900_bestv2/${tmdbData.results[selectedFilmIndex].poster_path}`,
                         ]
                     );
+                    console.log(newFilmID[0][0][0]);
+                    embedFilms[selectedFilmIndex].addFields({
+                        name: "ID con Taiga",
+                        value: `${newFilmID[0][0][0].id_peli}`,
+                    });
+
                     console.log("Pelicula agregada");
+
+                    await interaction.editReply({
+                        embeds: [embedFilms[selectedFilmIndex]],
+                        components: [],
+                    });
+
                     return;
                 }
 
