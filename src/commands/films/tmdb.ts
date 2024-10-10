@@ -7,6 +7,7 @@ import {
     SlashCommandBuilder,
 } from "discord.js";
 import { command, genresES, genresEN, EditReply } from "../../utils";
+import { addNewFilm } from "./../../data/dbMethods";
 function buildEmbedFilms(tmdbData: any, genreNames: any) {
     return tmdbData.results.map((result: any) => {
         let shortdescription =
@@ -166,15 +167,23 @@ export default command(meta, async ({ interaction, client }) => {
                     embedFilms[selectedFilmIndex].setFooter({
                         text: "Guardada con Taiga!",
                     });
-                    const newFilmID = await client.mysql.query(
-                        "call add_film(?,?,?)",
-                        [
-                            tmdbData.results[selectedFilmIndex].title,
-                            tmdbData.results[
-                                selectedFilmIndex
-                            ].release_date.split("-")[0],
-                            `https://image.tmdb.org/t/p/w600_and_h900_bestv2/${tmdbData.results[selectedFilmIndex].poster_path}`,
-                        ]
+                    // const newFilmID = await client.mysql.query(
+                    //     "call add_film(?,?,?)",
+                    //     [
+                    //         tmdbData.results[selectedFilmIndex].title,
+                    //         tmdbData.results[
+                    //             selectedFilmIndex
+                    //         ].release_date.split("-")[0],
+                    //         `https://image.tmdb.org/t/p/w600_and_h900_bestv2/${tmdbData.results[selectedFilmIndex].poster_path}`,
+                    //     ]
+                    // );
+                    const newFilmID = await addNewFilm(
+                        client,
+                        tmdbData.results[selectedFilmIndex].title,
+                        tmdbData.results[selectedFilmIndex].release_date.split(
+                            "-"
+                        )[0],
+                        `https://image.tmdb.org/t/p/w600_and_h900_bestv2/${tmdbData.results[selectedFilmIndex].poster_path}`
                     );
                     console.log(newFilmID[0][0][0]);
                     embedFilms[selectedFilmIndex].addFields({

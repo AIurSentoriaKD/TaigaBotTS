@@ -10,7 +10,7 @@ import * as puppeteer from "puppeteer";
 import { TMDB } from "tmdb-ts";
 
 //import { ImgurClient } from "imgur";
-//console.time("taiga");
+console.time("taiga");
 let taiga: Taiga;
 let browser: any;
 const init = async () => {
@@ -73,9 +73,8 @@ const init = async () => {
 init();
 
 process.on("SIGINT", function () {
-    // console.log("Caught interrupt signal");
+    console.log("Caught interrupt signal");
     taiga.sigintActions();
-    //browser.close();
-    //console.timeEnd("taiga");
-    //process.exit();
+    console.timeEnd("taiga");
+    process.exit();
 });

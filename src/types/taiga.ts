@@ -122,7 +122,6 @@ export class Taiga extends Client {
             const formatoFechaHora = `${dia}-${mes}-${anio} ${horas}_${minutos}_${segundos}`;
             syncWriteFile(`${formatoFechaHora}.json`, instantLog);
         } catch (error) {
-            console.log(error);
             console.log("No chat History");
         }
         console.log("Closing webView. . .");

@@ -1,6 +1,7 @@
 import { EmbedBuilder, SlashCommandBuilder, TextChannel } from "discord.js";
 import { command } from "../../utils";
 import { Pagination } from "discordjs-button-embed-pagination";
+import { getFilmList } from "./../../data/dbMethods";
 
 const meta = new SlashCommandBuilder()
     .setName("top")
@@ -19,11 +20,7 @@ function divideArray({ array, size }: ArrayDivProps) {
 }
 export default command(meta, async ({ interaction, client }) => {
     await interaction.deferReply();
-    const results = await client.mysql.execute(
-        "SELECT * FROM films where score is not null order by score desc",
-        []
-    );
-
+    const results = await getFilmList(client);
     const dividedPrincipalArray = divideArray({
         array: results[0],
         size: 5,

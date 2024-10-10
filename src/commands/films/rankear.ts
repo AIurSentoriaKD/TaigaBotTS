@@ -1,5 +1,6 @@
 import { SlashCommandBuilder } from "discord.js";
 import { command } from "../../utils";
+import { addFilmScore, filmHasUserScore } from "./../../data/dbMethods";
 
 const meta = new SlashCommandBuilder()
     .setName("rankear")
@@ -44,15 +45,19 @@ export default command(meta, async ({ interaction, client }) => {
                 ephemeral: true,
             });
         // comprobar si ya existe
-        const existe = await client.mysql.query(
-            "select * from user_filmscore where user_id = ? and id_peli = ?",
-            [interaction.user.id, parseInt(idPeli)]
+        const existe = await filmHasUserScore(
+            client,
+            interaction.user.id,
+            parseInt(idPeli)
         );
         if (existe[0].length > 0) {
             // actualizar score anterior
-            await client.mysql.query(
-                "update user_filmscore set score = ? where user_id = ? and id_peli = ?",
-                [parseInt(puntaje), interaction.user.id, parseInt(idPeli)]
+            await addFilmScore(
+                client,
+                interaction.user.id,
+                parseInt(idPeli),
+                parseInt(puntaje),
+                "UPDATE"
             );
             return await interaction.reply({
                 content:
@@ -61,24 +66,17 @@ export default command(meta, async ({ interaction, client }) => {
             });
         }
         // insertar
-        await client.mysql.query(
-            "insert into user_filmscore (user_id, id_peli, score) values (?, ?, ?)",
-            [interaction.user.id, parseInt(idPeli), parseInt(puntaje)]
+        await addFilmScore(
+            client,
+            interaction.user.id,
+            parseInt(idPeli),
+            parseInt(puntaje),
+            "ADD"
         );
         return await interaction.reply({
             content: "Calificación agregada",
         });
     } catch (error: any) {
         console.log(error);
-        // const userID = interaction.user.id;
-        // const username = interaction.user.username;
-        // const newUserQuery =
-        //     "insert into discord_users (user_id, username) values (?, ?)";
-        // await client.mysql.query(newUserQuery, [userID, username]);
-        // console.log("Nuevo usuario creado.");
-        // return await interaction.reply({
-        //     content: `Error al agregar la calificación. \n\`\`\`${error.message}\`\`\` \nSi es la primera vez que usas el bot, este error ya no saldrá. Intentalo de nuevo.`,
-        //     ephemeral: false,
-        // });
     }
 });

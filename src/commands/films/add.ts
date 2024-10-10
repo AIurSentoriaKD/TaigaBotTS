@@ -1,5 +1,6 @@
 import { SlashCommandBuilder } from "discord.js";
 import { command } from "../../utils";
+import { addNewFilm } from "./../../data/dbMethods";
 
 const meta = new SlashCommandBuilder()
     .setName("addfilm")
@@ -26,24 +27,22 @@ const meta = new SlashCommandBuilder()
 export default command(meta, async ({ interaction, client }) => {
     // if (interaction.user.id === "208678337646690307") {
     // agregar el nombre de la pelicula a la base de datos
+    await interaction.deferReply();
     const tituloPelicula: string =
         interaction.options.get("title")?.value?.toString() ?? "";
     const anioEstreno: string =
         interaction.options.get("anio")?.value?.toString() ?? "";
     const portada: string =
         interaction.options.get("portada")?.value?.toString() ?? "";
-    await client.mysql.query(
-        "insert into films (title, anio_estreno, portada) values (?,?,?)",
-        [tituloPelicula, anioEstreno, portada]
-    );
-    console.log("Pelicula agregada");
-    return await interaction.reply({
-        content: "Pelicula agregada",
-    });
-    // } else {
-    //   return await interaction.reply({
-    //     content: "No tienes permiso para usar este comando",
-    //     ephemeral: true,
-    //   });
-    // }
+
+    try {
+        await addNewFilm(client, tituloPelicula, anioEstreno, portada);
+        return await interaction.editReply({
+            content: "Pelicula agregada",
+        });
+    } catch {
+        return await interaction.editReply({
+            content: "Error al agregar la pelicula",
+        });
+    }
 });
